@@ -18,9 +18,9 @@
                 self.credit = credit;
                 self.debt = debt;
                 self.total = credit - debt;
-            })
+            });
         }
     
-        self.getSummary()
+        self.getSummary();
     }
 })()
