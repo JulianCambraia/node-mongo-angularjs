@@ -3,12 +3,14 @@ const bodyParser = require('body-parser'); // ajuda a fazer o parser do JSON que
 const express = require('express');
 const server = express();
 const allowCors = require('./cors');
+const queryParser = require('express-query-int');
 
 // bodyParser é um middleware que será o responsavel em fazer parser dos dados submetidos do formulário
 // estes dois middlewares serão chamados para todas as requisições da aplicação
 server.use(bodyParser.urlencoded({extended:true}));
 server.use(bodyParser.json()); // se for json faz o parser para um objeto JSON
 server.use(allowCors); // permitir fazer requisição entre dominios diferentes na API
+server.use(queryParser()); // parser na Query String convertendo as Strings da paginação por Inteiros
 
 server.listen(port, function(){
     console.log(`BACKEND está correndo na porta ${port}.`);

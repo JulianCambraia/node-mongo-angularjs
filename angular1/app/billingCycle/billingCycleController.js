@@ -1,20 +1,28 @@
 (function(){
     angular.module('primeiraApp').controller('BillingCycleCtrl', [
         '$http',
+        '$location',
         'msgs',
         'tabs',
         BillingCycleController
     ]);
 
-    function BillingCycleController($http, msgs, tabs) {
+    function BillingCycleController($http, $location, msgs, tabs) {
         const self = this;
         const url = 'http://localhost:4004/api/billingCycles';
+        const qtdeRegistrosPorPagina = 5;
+        const primeiraPagina = 1;
         self.refresh = function() {
-            $http.get(url).then(function(response){
+            // se page vier undefined ou null pega a primeira página
+            const page = parseInt($location.search().page) || primeiraPagina
+            $http.get(`${url}?skip=${(page - 1) * qtdeRegistrosPorPagina}&limit=${qtdeRegistrosPorPagina}`).then(function(response){
                 self.billingCycle = {credits:[{}], debts:[{}]};
                 self.billingCycles = response.data;
                 self.calculateValues();
                 tabs.show(self, {tabList: true, tabCreate: true});
+                $http.get(`${url}/count`).then(function(response) {
+                    self.page = Math.ceil(response.data.value / qtdeRegistrosPorPagina);
+                })
             })
         }
         self.create = function() {
