@@ -10,7 +10,7 @@
     function BillingCycleController($http, $location, msgs, tabs) {
         const self = this;
         const url = 'http://localhost:4004/api/billingCycles';
-        const qtdeRegistrosPorPagina = 5;
+        const qtdeRegistrosPorPagina = 2;
         const primeiraPagina = 1;
         self.refresh = function() {
             // se page vier undefined ou null pega a primeira página
@@ -19,11 +19,11 @@
                 self.billingCycle = {credits:[{}], debts:[{}]};
                 self.billingCycles = response.data;
                 self.calculateValues();
-                tabs.show(self, {tabList: true, tabCreate: true});
                 $http.get(`${url}/count`).then(function(response) {
-                    self.page = Math.ceil(response.data.value / qtdeRegistrosPorPagina);
-                })
-            })
+                    self.pages = Math.ceil(response.data.value / qtdeRegistrosPorPagina);
+                    tabs.show(self, {tabList: true, tabCreate: true});
+                });
+            });
         }
         self.create = function() {
             $http.post(url, self.billingCycle).then(function(response){
