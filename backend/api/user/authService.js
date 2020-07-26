@@ -38,3 +38,22 @@ const validateToken = (req, res, next) => {
         return res.status(200).send({valid: !err});
     }
 )}
+
+const signup = (req, res, next) => {
+    const name = req.body.name || '';
+    const email = req.body.email || '';
+    const password = req.body.password || '';
+    const confirmPassword = req.body.confirm_password || '';
+    
+    if (!email.match(emailRegex)) {
+        return res.status(400).send({
+            errors: ['O e-mail informado está inválido']
+        });
+    }
+    
+    if (!password.match(passwordRegex)) {
+        return res.status(400).send({
+            errors: ["Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, uma caractere especial(@#$%) e tamanho entre 6-12."]
+        });
+    }
+}   
