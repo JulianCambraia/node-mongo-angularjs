@@ -56,11 +56,31 @@ const signup = (req, res, next) => {
             errors: ["Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, uma caractere especial(@#$%) e tamanho entre 6-12."]
         });
     }
-    
+
     const salt = bcrypt.genSaltSync();
     const passwordHash = bcrypt.hashSync(password, salt);
     
     if (!bcrypt.compareSync(confirmPassword, passwordHash)) {
         return res.status(400).send({errors: ['Senhas não conferem.']});
     }
-}   
+
+    // valida se já existe um e-mail ou usuário cadastrado antes de salvar novo usuário/senha e senha confirmação
+    User.findOne({email}, (err, user) => {
+        if(err) {
+            return sendErrorsFromDB(res, err);
+        } else if (user) {
+            return res.status(400).send({errors: ['Usuário já cadastrado.']});
+        } else {
+            const newUser = new User({ name, email, password: passwordHash });
+            newUser.save(err => {
+                if(err) {
+                    return sendErrorsFromDB(res, err);
+                } else {
+                    login(req, res, next);
+                }
+            });
+        }
+    });
+}
+
+module.exports = { login, signup, validateToken };
