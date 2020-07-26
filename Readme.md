@@ -4,7 +4,7 @@ Serão adicionadas novas dependências ao projeto usando versões específicas p
 
 Novas dependências são:
 
-
+> 
 1. bycript@1.0.2
 2. jsonwebtoken@7.3.0
 
