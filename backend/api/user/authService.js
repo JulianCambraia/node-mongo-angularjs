@@ -56,4 +56,11 @@ const signup = (req, res, next) => {
             errors: ["Senha precisa ter: uma letra maiúscula, uma letra minúscula, um número, uma caractere especial(@#$%) e tamanho entre 6-12."]
         });
     }
+    
+    const salt = bcrypt.genSaltSync();
+    const passwordHash = bcrypt.hashSync(password, salt);
+    
+    if (!bcrypt.compareSync(confirmPassword, passwordHash)) {
+        return res.status(400).send({errors: ['Senhas não conferem.']});
+    }
 }   
